@@ -1,0 +1,271 @@
+Compte-rendu TP3
+
+------------------------------------------------------------------
+NOM  :KASA SOMBOA
+Prenom :CHRIS
+Numero carte d'etudiant :3672896
+
+NOM :DIALLO
+Prenom :BOUBACAR SIDY
+Numero carte d'etudiant :3674467
+------------------------------------------------------------------
+
+
+Passage de parametres et exportation de variables
+=================================================
+
+Question 1
+----------
+Inserez le code source du script pere_para.sh
+
+#! /bin/bash
+# pere_para.sh
+
+i=1
+
+while [ $i -le $1 ]
+ do
+	./fils_para.sh $i $1
+	
+	i=`expr $i + 1`
+	
+ done
+
+
+Inserez le code source du script fils_para.sh
+
+#! /bin/bash
+# fils_para.sh
+
+echo je suis le fils $1 sur $2
+
+
+Inserez les executions 
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ ./pere_para.sh 3
+je suis le fils 1 sur 3
+je suis le fils 2 sur 3
+je suis le fils 3 sur 3
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ 
+
+
+Question 2
+----------
+Inserez le code source du script pere.sh
+
+#! /bin/bash
+# pere_para.sh
+
+export i=1
+export var=$1
+
+while [ $i -le $1 ]
+ do
+	./fils_para.sh
+	
+	i=`expr $i + 1`
+	
+ done
+
+
+Inserez le code source du script fils.sh
+
+#! /bin/bash
+# fils_para.sh
+
+echo je suis le fils $i sur $vargedit per	
+
+
+Inserez les executions
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ ./pere_para.sh 3
+je suis le fils 1 sur 3
+je suis le fils 2 sur 3
+je suis le fils 3 sur 3
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$
+
+
+Hierarchie de processus shell
+=============================
+
+Question 1
+----------
+A = 30
+PID = 4337
+
+Question 2
+----------
+A = 
+PID = 4337
+PPID = 4389
+
+Question 3
+----------
+A = 30
+PID = 4337
+
+Question 4
+----------
+Execution : 
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ export A=30
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ bash
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ echo $A
+30
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ 
+
+
+Question 5
+----------
+Execution : 
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ A=8
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ echo $A
+8
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ exit
+exit
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ echo $A
+30
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ 
+
+
+Explications : Le shell fils hérite par export la varaible A=30 ( qui n'est qu'une copie); du coup lorsqu'on fait A=8, on ne modifie que la copie qui existe dans le shell fils. une fois quitée, dans le shell père A est toujours égale à 30. D'où l'affichage 30.
+
+Question 6
+----------
+Constatations : la varaible A n'étant pas exportée. A= . Affichage : 
+
+Question 7
+----------
+Constatations : ici, contraiment à la question 6, la variable A est exportée. du coup, A=30. Affichage : 30
+
+Explications : voire constations. le second terminal hérite du premier. 
+
+Question 8
+----------
+Constatations : Dans le terminal2 A = 12 et dans le terminal1 A est egale à 30
+
+Explications :
+  Le terminal2 hérite par export la varaible A=30 ( qui n'est qu'une copie); du coup lorsqu'on fait A=8, on ne modifie que la copie qui existe dans le terminal2. une fois quitée, dans le terminal1 A est toujours égale à 30. D'où l'affichage 30.
+
+
+
+Question 9
+----------
+Constatations : A modifiée dans le terminal 1 et aussi modifiée dans le terminal 2.
+
+Explications : terminal1 est le pere du terminal2. du coup, si on modifie A dans le terminal1, il est immédiatement modifié dans le terminal2.
+
+Question 10
+----------
+Constatations : la valeur de A affiché dans le terminal3 est celle de A du terminal2 après modification. 
+
+Explicatios : Export exporte la variable et non sa valeur. Et comme le terminal3 est le fils du terminal2, son A a pour valeur la dernière modification de A du terminal2.
+terminal3 est le petit fils du terminal1.
+
+Question 11
+----------
+Constatations : Rien comme affichage
+
+Deductions : ce nouveau terminal ne connait pas l'existance d'une variable A et n'a aucun lien de parenté avec les autres terminals.
+
+
+Redirection des entrees-sorties
+===============================
+
+Question 1
+----------
+Inserez le code source du script ensemble_calculs.sh
+
+! /bin/bash
+# ensemble_calculs.sh
+
+for i in "$@"
+ do
+	var1=${i:0:1}
+	var2=${i:2:1}
+	var3=${i:4:1}
+	
+	./calcul.sh $var1 $var2 $var3
+
+ done
+
+Inserez les exŽcutions
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ ./ensemble_calculs.sh "1 + 2" "5 - 7" "8 - 1" "8 - 8"
+3
+-2
+7
+0
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ 
+
+
+
+Question 2
+----------
+Inserez le code source du script ensemble_calculs1.sh
+
+#! /bin/bash
+# ensemble_calculs.sh
+
+var4=$1
+
+if [ -d $1 ]; then
+	exit 1
+
+fi 
+
+shift
+
+for i in "$@"
+ do
+	var1=${i:0:1}
+	var2=${i:2:1}
+	var3=${i:4:1}
+	
+	./calcul.sh $var1 $var2 $var3
+ done
+
+Inserez les executions
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ ./ensemble_calculs.sh fic2.txt "1 + 2" "5 - 7" "8 - 1" "8 - 8" > fic2.txt
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ cat fic2.txt 
+
+
+Inserez le code source du script ensemble_calculs2.sh
+
+#! /bin/bash
+# ensemble_calculs.sh
+
+var4=$1
+
+if [ -d $1 ]; then
+	exit 1
+
+fi 
+
+
+
+shift
+`echo "" > $var4`
+
+
+for i in "$@"
+ do
+	var1=${i:0:1}
+	var2=${i:2:1}
+	var3=${i:4:1}
+	
+	./calcul.sh $var1 $var2 $var3
+ done >> $var4
+
+Inserez les executions
+
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ ./ensemble_calculs.sh fic1.txt "1 + 2" "5 - 7" "8 - 1" "8 - 8"
+3672896@ppti-14-401-08:/users/nfs/Etu6/3672896/2I010-2017fev/TP3/TP3$ 
+
+Question 3
+----------
+Inserez le code des nouveaux scripts
+
+Inserez les executions
